@@ -31,6 +31,7 @@ This is the backend API documentation for the Lambda functions òo the Student S
     }
     "address": string
   },
+  "searchRadius": number // Used for other scores beside transit (Default = 1500)
 }
 ```
 
