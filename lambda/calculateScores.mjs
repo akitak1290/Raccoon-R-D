@@ -2,16 +2,15 @@
 /* global fetch */
 
 export const handler = async (event) => {
-  const body = JSON.parse(event.body)
-  const origin = body.origin;
-  const destination = body.destination;
+  const origin = event?.origin
+  const destination = event?.destination
   if (!origin || !destination) {
     return {
       statusCode: 400,
       message: 'Origin or Destination is missing'
     }
   }
-  
+
   const transitScore = await getTransitScore(origin, destination)
 
   if (!transitScore) {
@@ -35,12 +34,20 @@ const getTransitScore = async (origin, destination) => {
     'X-Goog-FieldMask': 'routes.legs.steps,routes.legs.stepsOverview'
   }
 
+  const date = new Date()
+  date.setDate(date.getDate() + ((1 + 7 - date.getDay()) % 7)) // Next Monday
+  date.setHours(10)
+  date.setMinutes(0)
+  date.setSeconds(0)
+  date.setMilliseconds(0)
+
   const body = {
     origin: origin,
     destination: destination,
     travelMode: 'TRANSIT',
     computeAlternativeRoutes: false,
-    arrivalTime: '2024-03-18T13:00:00.000Z'
+    transitPreferences: { routingPreference: 'FEWER_TRANSFERS' },
+    arrivalTime: date.toISOString()
   }
 
   const response = await fetch('https://routes.googleapis.com/directions/v2:computeRoutes', {
@@ -59,10 +66,10 @@ const getTransitScore = async (origin, destination) => {
 
   let distanceTotal = 0
   let distanceWalk = 0
-  let transitTimes = 0
+  let transfers = 0
   for (const segment of stepSegments) {
     if (segment.travelMode != 'WALK') {
-      transitTimes++
+      transfers++
     }
     for (let i = segment.stepStartIndex; i <= segment.stepEndIndex; i++) {
       distanceTotal += steps[i].distanceMeters
@@ -76,7 +83,7 @@ const getTransitScore = async (origin, destination) => {
     100 -
     Math.round(distanceTotal / 1000) * 1 -
     Math.round(distanceWalk / 1000) * 3 -
-    (transitTimes <= 0 ? 0 : (transitTimes - 1) * 5)
+    (transfers <= 0 ? 0 : (transfers - 1) * 10)
 
-  return score > 0 ? score : 0
+  return score > 0 ? Math.round(score) : 0
 }
