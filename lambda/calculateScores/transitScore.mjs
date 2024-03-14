@@ -1,30 +1,4 @@
-/* Lambda Function - Calculate Scores */
 /* global fetch */
-
-export const handler = async (event) => {
-  const origin = event?.origin
-  const destination = event?.destination
-  if (!origin || !destination) {
-    return {
-      statusCode: 400,
-      message: 'Origin or Destination is missing'
-    }
-  }
-
-  const transitScore = await getTransitScore(origin, destination)
-
-  if (!transitScore) {
-    return {
-      statusCode: 400,
-      message: 'Cannot get route'
-    }
-  }
-
-  return {
-    statusCode: 200,
-    body: { scores: { transit: transitScore } }
-  }
-}
 
 const getTransitScore = async (origin, destination) => {
   const headers = {
@@ -36,14 +10,17 @@ const getTransitScore = async (origin, destination) => {
 
   const date = new Date()
   date.setDate(date.getDate() + ((1 + 7 - date.getDay()) % 7)) // Next Monday
-  date.setHours(10)
+  date.setHours(14)
   date.setMinutes(0)
   date.setSeconds(0)
   date.setMilliseconds(0)
 
+  const formattedOrigin = formatPlace(origin)
+  const formattedDestination = formatPlace(destination)
+
   const body = {
-    origin: origin,
-    destination: destination,
+    origin: formattedOrigin,
+    destination: formattedDestination,
     travelMode: 'TRANSIT',
     computeAlternativeRoutes: false,
     transitPreferences: { routingPreference: 'FEWER_TRANSFERS' },
@@ -55,7 +32,6 @@ const getTransitScore = async (origin, destination) => {
     headers: headers,
     body: JSON.stringify(body)
   })
-
   const data = await response.json()
 
   const steps = data?.routes[0]?.legs[0]?.steps
@@ -87,3 +63,21 @@ const getTransitScore = async (origin, destination) => {
 
   return score > 0 ? Math.round(score) : 0
 }
+
+const formatPlace = (place) => {
+  if (!place?.placeId && !place?.position && !place?.address) {
+    return null
+  }
+
+  if (place?.position) {
+    return {
+      location: {
+        latLng: place.position
+      }
+    }
+  }
+
+  return place
+}
+
+export default getTransitScore
