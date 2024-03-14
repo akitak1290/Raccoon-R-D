@@ -24,7 +24,7 @@ export const handler = async (event) => {
     }
   }
 
-  const overallScore = (transitScore + groceryScore + restaurantScore + quietScore) / 4
+  const overallScore = (transitScore * 3 + groceryScore + restaurantScore + quietScore) / 6
 
   return {
     statusCode: 200,
