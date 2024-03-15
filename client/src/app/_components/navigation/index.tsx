@@ -11,7 +11,7 @@ export default function GNavBard() {
 		<Navbar
 			isMenuOpen={isMenuOpen}
 			onMenuOpenChange={setIsMenuOpen}
-			className="bg-[#F7F8FB] py-2 px-[5%] w-full"
+			className="bg-[#F7F8FB] px-[5%] w-full"
 			classNames={{ wrapper: "px-0 justify-between max-w-full", item: "px-0" }}>
 			<NavbarBrand className="sm:inline-block hidden">
 				<Link href="/">
@@ -26,7 +26,6 @@ export default function GNavBard() {
 			</NavbarBrand>
 			<NavbarMenuToggle
 				aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-				onClick={() => setIsMenuOpen(true)}
 				className="sm:hidden"
 			/>
 			<NavbarContent className="hidden sm:flex" justify="end">
@@ -63,6 +62,17 @@ export default function GNavBard() {
 			</NavbarContent>
 			<NavbarMenu>
 				<NavbarMenuItem>
+					<Link href="/" onClick={() => setIsMenuOpen(false)}>
+						<Image
+							src="/assets/images/logo_full_horizontal_2.png"
+							width={200}
+							height={200}
+							style={{ minWidth: "100px" }}
+							alt="logo"
+						/>
+					</Link>
+				</NavbarMenuItem>
+				<NavbarMenuItem>
 					<Link color={"primary"} className="w-full" href="/#about" size="lg" onClick={() => setIsMenuOpen(false)}>
 						About
 					</Link>
@@ -85,6 +95,11 @@ export default function GNavBard() {
 				<NavbarMenuItem>
 					<Link color={"primary"} className="w-full" href="#/contact" size="lg" onClick={() => setIsMenuOpen(false)}>
 						Contact Us
+					</Link>
+				</NavbarMenuItem>
+				<NavbarMenuItem>
+					<Link color={"primary"} className="w-full" href="/comparetable" size="lg" onClick={() => setIsMenuOpen(false)}>
+						My Listing
 					</Link>
 				</NavbarMenuItem>
 			</NavbarMenu>
