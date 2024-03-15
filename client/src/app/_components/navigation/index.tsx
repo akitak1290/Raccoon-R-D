@@ -55,6 +55,11 @@ export default function GNavBard() {
 						Contact Us
 					</Link>
 				</NavbarItem>
+				<NavbarItem>
+					<Link className="font-bold" color="foreground" href="/comparetable">
+						My Listing
+					</Link>
+				</NavbarItem>
 			</NavbarContent>
 			<NavbarMenu>
 				<NavbarMenuItem>
