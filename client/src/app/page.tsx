@@ -152,10 +152,10 @@ export default function Home() {
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-10 mmd:gap-20 md:px-40">
 					{/* !this shit could have been so much cleaner with css instead of tailwind */}
 					<div className="grid content-start">
-						<p className="justify-self-start bg-[#AECCF2] font-semibold ml-3 px-3 py-1">Official Guild</p>
+						<p className="justify-self-start bg-[#AECCF2] font-semibold ml-3 px-3 py-1">Official Guide</p>
 						<Link href="https://www.canada.ca/en/financial-consumer-agency/services/renting-first-apartment.html">
 							<div className="w-full hover:bg-[#AECCF2] text-black border-[#AECCF2] border-2 px-6 py-4">
-								<p>First Time Renting Guild</p>
+								<p>First Time Renting guide</p>
 								<p className="font-light">by Canada | 20 MIN READ</p>
 							</div>
 						</Link>
@@ -171,7 +171,7 @@ export default function Home() {
 						</Link>
 					</div>
 					<div className="grid content-start">
-						<p className="justify-self-start bg-[#AECCF2] font-semibold ml-3 px-3 py-1">Ontario Guild</p>
+						<p className="justify-self-start bg-[#AECCF2] font-semibold ml-3 px-3 py-1">Ontario Guide</p>
 						<Link href="https://news.ontario.ca/en/release/41515/know-your-rights-and-responsibilities-as-a-student-renter">
 							<div className="w-full hover:bg-[#AECCF2] text-black border-[#AECCF2] border-2 px-6 py-4">
 								<p>Rights and Responsibilities as a Student Renter</p>
