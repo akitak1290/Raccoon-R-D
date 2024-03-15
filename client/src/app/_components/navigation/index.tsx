@@ -11,16 +11,18 @@ export default function GNavBard() {
 		<Navbar
 			isMenuOpen={isMenuOpen}
 			onMenuOpenChange={setIsMenuOpen}
-			className="bg-[#F7F8FB] py-2 px-[5%] w-full" 
+			className="bg-[#F7F8FB] py-2 px-[5%] w-full"
 			classNames={{ wrapper: "px-0 justify-between max-w-full", item: "px-0" }}>
 			<NavbarBrand className="sm:inline-block hidden">
-				<Image
-					src="/assets/images/logo_full_horizontal_2.png"
-					width={200}
-					height={200}
-					style={{ minWidth: "150px" }}
-					alt="logo"
-				/>
+				<Link href="/">
+					<Image
+						src="/assets/images/logo_full_horizontal_2.png"
+						width={200}
+						height={200}
+						style={{ minWidth: "150px" }}
+						alt="logo"
+					/>
+				</Link>
 			</NavbarBrand>
 			<NavbarMenuToggle
 				aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -29,54 +31,54 @@ export default function GNavBard() {
 			/>
 			<NavbarContent className="hidden sm:flex" justify="end">
 				<NavbarItem>
-					<Link color="foreground" href="#about">
+					<Link color="foreground" href="/#about">
 						About
 					</Link>
 				</NavbarItem>
 				<NavbarItem>
-					<Link color="foreground" href="#getscore">
+					<Link color="foreground" href="/#getscore">
 						Get Score
 					</Link>
 				</NavbarItem>
 				<NavbarItem>
-					<Link color="foreground" href="#resources">
+					<Link color="foreground" href="/#resources">
 						Resources
 					</Link>
 				</NavbarItem>
 				<NavbarItem>
-					<Link color="foreground" href="#faqs">
+					<Link color="foreground" href="/#faqs">
 						FAQs
 					</Link>
 				</NavbarItem>
 				<NavbarItem>
-					<Link color="foreground" href="#contact">
+					<Link color="foreground" href="/#contact">
 						Contact Us
 					</Link>
 				</NavbarItem>
 			</NavbarContent>
 			<NavbarMenu>
 				<NavbarMenuItem>
-					<Link color={"primary"} className="w-full" href="#about" size="lg" onClick={() => setIsMenuOpen(false)}>
+					<Link color={"primary"} className="w-full" href="/#about" size="lg" onClick={() => setIsMenuOpen(false)}>
 						About
 					</Link>
 				</NavbarMenuItem>
 				<NavbarMenuItem>
-					<Link color={"primary"} className="w-full" href="#getscore" size="lg" onClick={() => setIsMenuOpen(false)}>
+					<Link color={"primary"} className="w-full" href="/#getscore" size="lg" onClick={() => setIsMenuOpen(false)}>
 						Get Score
 					</Link>
 				</NavbarMenuItem>
 				<NavbarMenuItem>
-					<Link color={"primary"} className="w-full" href="#resources" size="lg" onClick={() => setIsMenuOpen(false)}>
+					<Link color={"primary"} className="w-full" href="/#resources" size="lg" onClick={() => setIsMenuOpen(false)}>
 						Resources
 					</Link>
 				</NavbarMenuItem>
 				<NavbarMenuItem>
-					<Link color={"primary"} className="w-full" href="#faqs" size="lg" onClick={() => setIsMenuOpen(false)}>
+					<Link color={"primary"} className="w-full" href="/#faqs" size="lg" onClick={() => setIsMenuOpen(false)}>
 						FAQs
 					</Link>
 				</NavbarMenuItem>
 				<NavbarMenuItem>
-					<Link color={"primary"} className="w-full" href="#contact" size="lg" onClick={() => setIsMenuOpen(false)}>
+					<Link color={"primary"} className="w-full" href="#/contact" size="lg" onClick={() => setIsMenuOpen(false)}>
 						Contact Us
 					</Link>
 				</NavbarMenuItem>

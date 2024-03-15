@@ -41,19 +41,19 @@ export default function GFooter() {
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-0 [&>*]:justify-self-center">
 					<div className="flex flex-col sm:text-left text-center gap-1.5 font-extralight">
 						<p className="font-bold no-underline mb-2">Navigate</p>
-						<Link className="underline" color="foreground" href="#about">
+						<Link className="underline" color="foreground" href="/#about">
 							About Us
 						</Link>
-						<Link className="underline" color="foreground" href="#getscore">
+						<Link className="underline" color="foreground" href="/#getscore">
 							Get Score
 						</Link>
-						<Link className="underline" color="foreground" href="#resources">
+						<Link className="underline" color="foreground" href="/#resources">
 							Resources
 						</Link>
-						<Link className="underline" color="foreground" href="#faqs">
+						<Link className="underline" color="foreground" href="/#faqs">
 							FAQs
 						</Link>
-						<Link className="underline" color="foreground" href="#contact">
+						<Link className="underline" color="foreground" href="/#contact">
 							Contact Us
 						</Link>
 						<p></p>
