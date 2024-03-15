@@ -47,18 +47,20 @@ export default function CompareTable() {
 				);
 			case "actions":
 				return (
-					<div className="relative flex items-center gap-2">
+					<div className="relative flex flex-col sm:flex-row items-center gap-2">
 						<span className="text-lg text-default-400 cursor-pointer active:opacity-50">
 							<Switch
 								defaultSelected aria-label="Automatic updates"
+								size="sm"
 							// isSelected={isSelected}
 							// onValueChange={setIsSelected}	
 							/>
 						</span>
-						<span className="text-danger">
-							<svg width="28" height="31" viewBox="0 0 28 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path d="M21.7778 31H6.22222C4.504 31 3.11111 29.6121 3.11111 27.9V7.75H0V4.65H6.22222V3.1C6.22222 1.38792 7.61511 0 9.33333 0H18.6667C20.3849 0 21.7778 1.38792 21.7778 3.1V4.65H28V7.75H24.8889V27.9C24.8889 29.6121 23.496 31 21.7778 31ZM6.22222 7.75V27.9H21.7778V7.75H6.22222ZM9.33333 3.1V4.65H18.6667V3.1H9.33333ZM18.6667 24.8H15.5556V10.85H18.6667V24.8ZM12.4444 24.8H9.33333V10.85H12.4444V24.8Z" fill="#D32F2F" />
+						<span className="text-danger cursor-pointer active:opacity-50">
+							<svg width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M17.1111 24H4.88889C3.53886 24 2.44444 22.9255 2.44444 21.6V6H0V3.6H4.88889V2.4C4.88889 1.07452 5.9833 0 7.33333 0H14.6667C16.0167 0 17.1111 1.07452 17.1111 2.4V3.6H22V6H19.5556V21.6C19.5556 22.9255 18.4611 24 17.1111 24ZM4.88889 6V21.6H17.1111V6H4.88889ZM7.33333 2.4V3.6H14.6667V2.4H7.33333ZM14.6667 19.2H12.2222V8.4H14.6667V19.2ZM9.77778 19.2H7.33333V8.4H9.77778V19.2Z" fill="#D32F2F" />
 							</svg>
+
 						</span>
 					</div>
 				);
@@ -77,7 +79,7 @@ export default function CompareTable() {
 				<hr className="border-[#2196F3] grow hidden sm:inline-block" />
 			</div>
 
-			<Table aria-label="Listing Table" className="px-40">
+			<Table aria-label="Listing Table" className="px-5 md:px-20 lg:px-40">
 				<TableHeader columns={columns}>
 					{(column) => <TableColumn key={column.uid}>{column.name}</TableColumn>}
 				</TableHeader>
@@ -90,7 +92,7 @@ export default function CompareTable() {
 				</TableBody>
 			</Table>
 
-			<div className="px-60 flex justify-center">
+			<div className="px-10 md:px-40 lg:px-60 flex justify-center">
 				<Link href="/#getscore">
 					<Button color="primary" className="text-white text-lg rounded py-1 justify-center bg-[#2196F3] justify-self-start hover:text-white">
 						<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
