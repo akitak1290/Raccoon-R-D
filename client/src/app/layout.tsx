@@ -19,7 +19,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en" className="scroll-smooth focus:scroll-auto">
+		<html lang="en" className="scroll-smooth">
 			<body className={inter.className}>
 				<UIProvider>
 					<GNavBard/>
