@@ -21,6 +21,75 @@ const criteria = {
 	restaurant: 'Restaurant Score'
 };
 
+// ... at least is it better than hardcoded desc, oh wait...
+// !for demo only, not enough time for proper logic
+function getDescription(key: string, score: number) {
+	let desc = '';
+	switch (key) {
+		case 'transit':
+			if(score > 60) {
+				desc = "Grate commute!"
+			}
+			else if (score > 40 && score <= 60) {
+				desc = "Decent commute!"
+			}
+			else if (score > 10 && score <= 40) {
+				desc = "You might have a hard time commuting"
+			}
+			else {
+				desc = "You will definitely have a hard time commuting"
+			}
+			break;
+		case 'quietEnvironment':
+			if(score > 60) {
+				desc = "Quite, peaceful environment, lots of parks"
+			}
+			else if (score > 40 && score <= 60) {
+				desc = "Relatively quiet environment"
+			}
+			else if (score > 10 && score <= 40) {
+				desc = "Not a lot of places to go to reduce stress"
+			}
+			else {
+				desc = "Hostile environment, enemy closing in, suit up!"
+			}
+			break;
+		case 'grocery':
+			if(score > 60) {
+				desc = "Great grocery choices!"
+			}
+			else if (score > 40 && score <= 60) {
+				desc = "Decent grocery choices"
+			}
+			else if (score > 10 && score <= 40) {
+				desc = "Lack of grocery variety"
+			}
+			else {
+				desc = "Get ready to hunt to eat!"
+			}
+			break;
+		case 'restaurant':
+			if(score > 60) {
+				desc = "Lots of restaurant options to choose from!"
+			}
+			else if (score > 40 && score <= 60) {
+				desc = "Somme options for restaurant"
+			}
+			else if (score > 10 && score <= 40) {
+				desc = "Might need to cook your own food or be ready to commute"
+			}
+			else {
+				desc = "Hope your cooking skill is not rusty!"
+			}
+			break;
+		default:
+			desc = 'uh.. https://dota2.fandom.com/wiki/Shitty_Wizard'
+			break;
+	}
+
+	return desc;
+}
+
 export default function ScoreReport() {
 	const [bookmarked, setBookmarked] = useState(false);
 	const [score, setScore] = useRecoilState(scoreState);
@@ -132,7 +201,7 @@ export default function ScoreReport() {
 								</div>
 								<div>
 									<p className="font-bold text-large mb-3">{criteria[key as keyof ScoreCriteriaType]}</p>
-									<p className="justify-self-start">Lots of necessities in walkable distance</p>
+									<p className="justify-self-start">{getDescription(key, score.scores[key as keyof ScoreCriteriaType])}</p>
 								</div>
 							</CardBody>
 						</Card>
