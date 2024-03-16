@@ -131,7 +131,7 @@ export default function ScoreReport() {
 	return (
 		<div className="[&>*]:mb-10">
 			<div id="address" className="bg-[#2196F3] font-bold text-white text-center py-3 text-2xl">
-				<p>12 Leslie Street</p>
+				<p>{score.source}</p>
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-2 px-10 md:px-30 lg:px-40 gap-10 md:gap-15">
 				<Card className="justify-self-center md:justify-self-end">
