@@ -28,7 +28,7 @@ function getDescription(key: string, score: number) {
 	switch (key) {
 		case 'transit':
 			if(score > 60) {
-				desc = "Grate commute!"
+				desc = "Great commute!"
 			}
 			else if (score > 40 && score <= 60) {
 				desc = "Decent commute!"
@@ -42,7 +42,7 @@ function getDescription(key: string, score: number) {
 			break;
 		case 'quietEnvironment':
 			if(score > 60) {
-				desc = "Quite, peaceful environment, lots of parks"
+				desc = "Quiet, peaceful environment, lots of parks"
 			}
 			else if (score > 40 && score <= 60) {
 				desc = "Relatively quiet environment"
