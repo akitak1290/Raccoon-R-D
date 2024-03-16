@@ -40,17 +40,20 @@ export default function ScoreReport() {
 				school: score.destination
 			}
 			storedScoreParse.push(data);
-			localStorage.setItem('scores', JSON.stringify(storedScoreParse));
-			router.push('/comparetable')
+			if (typeof window !== "undefined"){
+				localStorage.setItem('scores', JSON.stringify(storedScoreParse));
+			}
 		} else {
-			localStorage.setItem('scores', JSON.stringify([
-				{
-					id: 1,
-					address: score.source,
-					score: score.overall,
-					school: score.destination
-				}
-			]));
+			if (typeof window !== "undefined"){
+				localStorage.setItem('scores', JSON.stringify([
+					{
+						id: 1,
+						address: score.source,
+						score: score.overall,
+						school: score.destination
+					}
+				]));
+			}
 		}
 
 		setBookmarked(!bookmarked);

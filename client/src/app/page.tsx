@@ -83,7 +83,7 @@ function SearchFields() {
 						defaultItems={suggestionsSource.data}
 						isDisabled={!(readySource)}
 						onInputChange={(v) => setValueSource(v)}
-						onKeyDown={(e) => e.continuePropagation()} // !NOT ERROR, IS FIX, DON'T CHANGE
+						// onKeyDown={(e) => e.continuePropagation()} // !NOT ERROR, IS FIX, DON'T CHANGE
 					>
 						{({ place_id, description }) =>
 							<AutocompleteItem key={place_id}>{description}</AutocompleteItem>
@@ -95,7 +95,7 @@ function SearchFields() {
 						defaultItems={suggestionsDestination.data}
 						isDisabled={!(readyDestination)}
 						onInputChange={(v) => setValueDestination(v)}
-						onKeyDown={(e) => e.continuePropagation()} // !NOT ERROR MATTER, IS FIX, DON'T CHANGE
+						// onKeyDown={(e) => e.continuePropagation()} // !NOT ERROR MATTER, IS FIX, DON'T CHANGE
 					>
 						{({ place_id, description }) =>
 							<AutocompleteItem key={place_id}>{description}</AutocompleteItem>

@@ -35,7 +35,8 @@ export default function CompareTable() {
 	const router = useRouter();
 	// localStorage.removeItem('scores');
 
-	const scores = localStorage.getItem('scores');
+	// ssr shenanigans
+	const scores = typeof window !== "undefined" ? localStorage.getItem('scores') : undefined;
 	let listings: ListingType[];
 	if (scores) {
 		const scoresParsed: ListingType[] = JSON.parse(scores);
