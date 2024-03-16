@@ -297,7 +297,7 @@ export default function Home() {
 							<p>Student Space is also about accessibility. We strive to make our app easy to use, inclusive, and available to students of all backgrounds, assisting them to find suitable housing options that meet their needs and preferences.</p>
 						</AccordionItem>
 						<AccordionItem key="2" aria-label="Accordion 2" title="How do we calculate score?">
-							<p>A well guarded secret!</p>
+							<p>The app will take on consideration of where you live, then provide a score based on: how far to your campus, nearby available public transport, nearby stores, community or social spaces, quiet environment for study, overall safety and security.</p>
 						</AccordionItem>
 						<AccordionItem key="3" aria-label="Accordion 3" title="Assets and softwares we used for this demo">
 							Images - Unsplash Icons - Freepik  Planning - Figma Map - Google
