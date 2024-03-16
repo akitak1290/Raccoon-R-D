@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { FormEvent } from "react";
 import { Input, Link, Accordion, AccordionItem, Button, Textarea, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 
 import { useLoadScript } from "@react-google-maps/api";
 import type { Libraries } from '@googlemaps/js-api-loader';
@@ -83,7 +84,7 @@ function SearchFields() {
 						defaultItems={suggestionsSource.data}
 						isDisabled={!(readySource)}
 						onInputChange={(v) => setValueSource(v)}
-						// onKeyDown={(e) => e.continuePropagation()} // !NOT ERROR, IS FIX, DON'T CHANGE
+					// onKeyDown={(e) => e.continuePropagation()} // !NOT ERROR, IS FIX, DON'T CHANGE
 					>
 						{({ place_id, description }) =>
 							<AutocompleteItem key={place_id}>{description}</AutocompleteItem>
@@ -95,7 +96,7 @@ function SearchFields() {
 						defaultItems={suggestionsDestination.data}
 						isDisabled={!(readyDestination)}
 						onInputChange={(v) => setValueDestination(v)}
-						// onKeyDown={(e) => e.continuePropagation()} // !NOT ERROR MATTER, IS FIX, DON'T CHANGE
+					// onKeyDown={(e) => e.continuePropagation()} // !NOT ERROR MATTER, IS FIX, DON'T CHANGE
 					>
 						{({ place_id, description }) =>
 							<AutocompleteItem key={place_id}>{description}</AutocompleteItem>
@@ -115,6 +116,8 @@ export default function Home() {
 	const [lName, setLName] = useState('');
 	const [email, setEmail] = useState('');
 	const [message, setMessage] = useState('');
+
+	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	const libraries = useRef<Libraries>(['places']);
 
@@ -361,7 +364,26 @@ export default function Home() {
 						onValueChange={setMessage}
 						className="col-span-2"
 					/>
-					<Button color="primary" className="text-2xl rounded py-6 px-6 bg-[#2196F3] col-span-2 justify-self-end" type="submit">Submit</Button>
+					<Button color="primary" className="text-2xl rounded py-6 px-6 bg-[#2196F3] col-span-2 justify-self-end" type="submit" onPress={onOpen}>Submit</Button>
+					<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+						<ModalContent>
+							{(onClose) => (
+								<>
+									<ModalHeader className="flex flex-col gap-1">Thank you for reaching out!</ModalHeader>
+									<ModalBody>
+										<p>
+											Our team will be in contact with you soon.
+										</p>
+									</ModalBody>
+									<ModalFooter>
+										<Button color="danger" variant="light" onPress={onClose}>
+											Close
+										</Button>
+									</ModalFooter>
+								</>
+							)}
+						</ModalContent>
+					</Modal>
 				</form>
 			</div>
 		</main>
