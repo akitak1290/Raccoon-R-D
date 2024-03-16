@@ -11,7 +11,7 @@ export default function GNavBard() {
 		<Navbar
 			isMenuOpen={isMenuOpen}
 			onMenuOpenChange={setIsMenuOpen}
-			className="bg-[#F7F8FB] px-[5%] w-full"
+			className="bg-white px-[5%] w-full"
 			classNames={{ wrapper: "px-0 justify-between max-w-full", item: "px-0" }}>
 			<NavbarBrand className="sm:inline-block hidden">
 				<Link href="/">

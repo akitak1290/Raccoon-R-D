@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import RecoilContextProvider from "./_recoil/ContextProvider";
 import { UIProvider } from "./_nextui/UIProvider";
 import GNavBard from "./_components/navigation";
 import GFooter from "./_components/footer";
@@ -21,11 +22,13 @@ export default function RootLayout({
 	return (
 		<html lang="en" className="scroll-smooth">
 			<body className={inter.className}>
-				<UIProvider>
-					<GNavBard/>
-					{children}
-					<GFooter/>
-				</UIProvider>
+				<RecoilContextProvider>
+					<UIProvider>
+						<GNavBard/>
+						{children}
+						<GFooter/>
+					</UIProvider>
+				</RecoilContextProvider>
 			</body>
 		</html>
 	);

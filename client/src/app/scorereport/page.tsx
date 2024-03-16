@@ -1,28 +1,71 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Link, Card, CardHeader, CardBody, Switch } from "@nextui-org/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+import { useRecoilState } from "recoil";
+import { ScoreCriteriaType, ScoreType, scoreState } from "../_recoil/ContextProvider";
+import Map from "./_components/map";
+
+// type CriteriaType = {
+// 	[key] 
+// }
+
+// stupid mapping 
+const criteria = {
+	transit: 'Transit Score',
+	quietEnvironment: 'Walk Score',
+	grocery: 'Grocery Store',
+	restaurant: 'Restaurant Score'
+};
 
 export default function ScoreReport() {
-	// TODO: fetch this from store or session storage
 	const [bookmarked, setBookmarked] = useState(false);
-	const criteria = ['Transit Score', 'Walk Score', 'Grocery Store', 'Restaurant Score'];
+	const [score, setScore] = useRecoilState(scoreState);
+	const router = useRouter();
 
-	// placeholders
-	// TODO: update
-	const totalScore = 47;
+	const bookmarkScore = () => {
+		// TODO: this should also allow deletion from local storage
+		// TODO: but for now it will just keep adding stuff
+		const storedScore = localStorage.getItem('scores');
+		if (storedScore !== null) {
+			// ! good enough way to store data for demo
+			const storedScoreParse: any[] = JSON.parse(storedScore);
+			const data = {
+				id: storedScoreParse.length + 1,
+				address: score.source,
+				score: score.overall,
+				school: score.destination
+			}
+			storedScoreParse.push(data);
+			localStorage.setItem('scores', JSON.stringify(storedScoreParse));
+			router.push('/comparetable')
+		} else {
+			localStorage.setItem('scores', JSON.stringify([
+				{
+					id: 1,
+					address: score.source,
+					score: score.overall,
+					school: score.destination
+				}
+			]));
+		}
+
+		setBookmarked(!bookmarked);
+	}
 
 	return (
-		<div>
+		<div className="[&>*]:mb-10">
 			<div id="address" className="bg-[#2196F3] font-bold text-white text-center py-3 text-2xl">
 				<p>12 Leslie Street</p>
 			</div>
-			<div className="grid grid-cols-1 md:grid-cols-2 my-5 px-10 md:px-30 lg:px-40 gap-10 md:gap-15">
+			<div className="grid grid-cols-1 md:grid-cols-2 px-10 md:px-30 lg:px-40 gap-10 md:gap-15">
 				<Card className="justify-self-center md:justify-self-end">
 					<CardBody className="text-center justify-center">
 						<p className="text-2xl">Total Score</p>
-						<p className="text-bold text-7xl">{totalScore}</p>
+						<p className="text-bold text-7xl">{score.overall}</p>
 					</CardBody>
 				</Card>
 				{/* !I mean, again, pretty rtded, need to reuse css */}
@@ -31,7 +74,7 @@ export default function ScoreReport() {
 						<Button
 							color="primary"
 							className="text-black text-lg rounded py-1 bg-[#CDE7FC] hover:bg-[#2196F3] hover:text-white"
-							onClick={() => setBookmarked(!bookmarked)}>
+							onClick={() => bookmarkScore()}>
 							{
 
 								bookmarked ?
@@ -51,7 +94,7 @@ export default function ScoreReport() {
 							}
 
 						</Button>
-						<Link href="/compare">
+						<Link href="/comparetable">
 							<Button color="primary" className="text-black text-lg rounded py-1 bg-[#CDE7FC] hover:bg-[#2196F3] hover:text-white">
 								Compare
 								<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,37 +103,37 @@ export default function ScoreReport() {
 							</Button>
 						</Link>
 					</div>
-					<Button color="primary" className="text-black text-lg rounded py-1 bg-[#CDE7FC] justify-self-start hover:bg-[#2196F3] hover:text-white">
-						<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M3.52863 11.6332C3.22671 11.9322 3.05713 12.3376 3.05713 12.7603C3.05713 13.183 3.22671 13.5884 3.52863 13.8875L9.60773 19.905C9.91018 20.2042 10.3204 20.3723 10.7481 20.3723C11.1758 20.3723 11.586 20.2042 11.8885 19.905C12.1909 19.6058 12.3608 19.1999 12.3608 18.7768C12.3608 18.3536 12.1909 17.9478 11.8885 17.6486L8.56087 14.3553L20.9588 14.3553C21.3863 14.3553 21.7964 14.1873 22.0988 13.8882C22.4011 13.589 22.571 13.1833 22.571 12.7603C22.571 12.3373 22.4011 11.9316 22.0988 11.6325C21.7964 11.3333 21.3863 11.1653 20.9588 11.1653L8.56087 11.1653L11.8885 7.87314C12.0382 7.72498 12.157 7.54909 12.2381 7.35551C12.3191 7.16193 12.3608 6.95446 12.3608 6.74493C12.3608 6.5354 12.3191 6.32792 12.2381 6.13434C12.157 5.94076 12.0382 5.76487 11.8885 5.61671C11.7387 5.46855 11.5609 5.35102 11.3653 5.27084C11.1696 5.19066 10.9599 5.14939 10.7481 5.14939C10.5363 5.14939 10.3266 5.19066 10.1309 5.27084C9.93527 5.35102 9.75749 5.46855 9.60773 5.61671L3.52863 11.6332Z" fill="black" />
-						</svg>
-						Find other place
-					</Button>
-					<Button color="primary" className="text-black text-lg rounded py-1 bg-[#CDE7FC] justify-self-start hover:bg-[#2196F3] hover:text-white">Get score for your site</Button>
+					<Link href="/#getscore">
+						<Button color="primary" className="text-black text-lg rounded py-1 bg-[#CDE7FC] justify-self-start hover:bg-[#2196F3] hover:text-white">
+							<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M3.52863 11.6332C3.22671 11.9322 3.05713 12.3376 3.05713 12.7603C3.05713 13.183 3.22671 13.5884 3.52863 13.8875L9.60773 19.905C9.91018 20.2042 10.3204 20.3723 10.7481 20.3723C11.1758 20.3723 11.586 20.2042 11.8885 19.905C12.1909 19.6058 12.3608 19.1999 12.3608 18.7768C12.3608 18.3536 12.1909 17.9478 11.8885 17.6486L8.56087 14.3553L20.9588 14.3553C21.3863 14.3553 21.7964 14.1873 22.0988 13.8882C22.4011 13.589 22.571 13.1833 22.571 12.7603C22.571 12.3373 22.4011 11.9316 22.0988 11.6325C21.7964 11.3333 21.3863 11.1653 20.9588 11.1653L8.56087 11.1653L11.8885 7.87314C12.0382 7.72498 12.157 7.54909 12.2381 7.35551C12.3191 7.16193 12.3608 6.95446 12.3608 6.74493C12.3608 6.5354 12.3191 6.32792 12.2381 6.13434C12.157 5.94076 12.0382 5.76487 11.8885 5.61671C11.7387 5.46855 11.5609 5.35102 11.3653 5.27084C11.1696 5.19066 10.9599 5.14939 10.7481 5.14939C10.5363 5.14939 10.3266 5.19066 10.1309 5.27084C9.93527 5.35102 9.75749 5.46855 9.60773 5.61671L3.52863 11.6332Z" fill="black" />
+							</svg>
+							Find other place
+						</Button>
+					</Link>
+					<Button color="primary" isDisabled className="text-black text-lg rounded py-1 bg-[#CDE7FC] justify-self-start hover:bg-[#2196F3] hover:text-white">Get score for your site</Button>
 				</div>
 			</div>
 			{/* TODO: update this after connecting to API */}
-			<div className="h-[600px] w-full relative">
-				<Image
-					src="/assets/images/map_placeholder.png"
-					fill
-					style={{ objectFit: "contain" }}
-					quality={100}
-					alt="map placeholder"
-				/>
+			<div className="w-full flex justify-center">
+				<Map source={score.source} destination={score.destination} />
 			</div>
-			<div className="flex justify-between px-10 md:px-20 lg:px-30">
+			<div className="flex flex-col xl:flex-row justify-between px-10 md:px-20 lg:px-60 gap-10">
 				{
-					criteria.map((criterion, idx) =>
+					Object.keys(score.scores).map((key, idx) =>
 						<Card key={idx}>
-							<CardHeader className="flex items-start">
-								<Switch defaultSelected aria-label="Automatic updates" />
-								<h4 className="font-bold text-large">{criterion}</h4>
-							</CardHeader>
-							<CardBody>
-								<p className="text-tiny">Lots of necessities in walkable distance</p>
+							<CardBody className="flex flex-row gap-4">
+								<div>
+									<Switch className="mb-3" defaultSelected aria-label="Automatic updates" />
+									<p className="font-bold text-4xl justify-self-end">{score.scores[key as keyof ScoreCriteriaType]}</p>
+								</div>
+								<div>
+									<p className="font-bold text-large mb-3">{criteria[key as keyof ScoreCriteriaType]}</p>
+									<p className="justify-self-start">Lots of necessities in walkable distance</p>
+								</div>
 							</CardBody>
-						</Card>)
+						</Card>
+					)
 				}
 			</div>
 		</div>

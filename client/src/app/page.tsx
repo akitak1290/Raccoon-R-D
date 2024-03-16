@@ -1,12 +1,114 @@
 "use client"
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { FormEvent } from "react";
-import { Input, Link, Accordion, AccordionItem, Button, Textarea } from "@nextui-org/react";
+import { Input, Link, Accordion, AccordionItem, Button, Textarea, Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react";
 
-// TODO: refac
-// TODO: this shit ain't mobile friendly yet
+import { useLoadScript } from "@react-google-maps/api";
+import type { Libraries } from '@googlemaps/js-api-loader';
+import usePlacesAutocomplete, {
+	getGeocode,
+	getLatLng,
+} from "use-places-autocomplete";
+
+import { useRecoilState } from "recoil";
+import { scoreState } from "./_recoil/ContextProvider";
+import { useRouter } from "next/navigation";
+
+// monster component
+// TODO: refac would be good
+
+function SearchFields() {
+	// refac to this component to make sure correct google api and auotcomplete load order
+	const {
+		ready: readySource,
+		value: valueSource,
+		setValue: setValueSource,
+		suggestions: suggestionsSource,
+		clearSuggestions: clearSuggestionsSource,
+	} = usePlacesAutocomplete();
+
+	const {
+		ready: readyDestination,
+		value: valueDestination,
+		setValue: setValueDestination,
+		suggestions: suggestionsDestination,
+		clearSuggestions: clearSuggestionsDestination,
+	} = usePlacesAutocomplete();
+
+	const [loadingAddress, setLoadingAddress] = useState(false);
+
+	const [score, setScore] = useRecoilState(scoreState);
+
+	const router = useRouter();
+
+	const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+
+		setLoadingAddress(true);
+
+		fetch('https://oz7j1a4yb9.execute-api.ap-southeast-1.amazonaws.com/test/calculate-scores',
+			{
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					"origin": { "address": valueSource },
+					"destination": { "address": valueDestination },
+					"searchRadius": 1500
+				})
+			})
+			.then((res) => res.json())
+			.then((data) => {
+				setLoadingAddress(false);
+				setScore({ ...data.body, source: valueSource, destination: valueDestination });
+				router.push('/scorereport')
+			})
+	};
+
+	return (
+		<>
+
+			<div className="col-span-4 mx-10 md:col-span-2 md:mx-5">
+				<form onSubmit={onSubmit} className="flex flex-col items-center gap-10">
+					<div className="mb-6">
+						<p className="text-4xl mb-2">Find Your Neighborhood</p>
+						<p className="font-light">Search for an address and see what the area has to offer</p>
+					</div>
+					<Autocomplete
+						label="Location"
+						className=""
+						defaultItems={suggestionsSource.data}
+						isDisabled={!(readySource)}
+						onInputChange={(v) => setValueSource(v)}
+						onKeyDown={(e) => e.continuePropagation()} // !NOT ERROR, IS FIX, DON'T CHANGE
+					>
+						{({ place_id, description }) =>
+							<AutocompleteItem key={place_id}>{description}</AutocompleteItem>
+						}
+					</Autocomplete>
+					<Autocomplete
+						label="Your School"
+						className=""
+						defaultItems={suggestionsDestination.data}
+						isDisabled={!(readyDestination)}
+						onInputChange={(v) => setValueDestination(v)}
+						onKeyDown={(e) => e.continuePropagation()} // !NOT ERROR MATTER, IS FIX, DON'T CHANGE
+					>
+						{({ place_id, description }) =>
+							<AutocompleteItem key={place_id}>{description}</AutocompleteItem>
+						}
+					</Autocomplete>
+					<Button color="primary" className="text-2xl rounded py-6 px-6 bg-[#2196F3]" type="submit">
+						{loadingAddress ? <CircularProgress size="sm" aria-label="Loading..." /> : <p>Get Score</p>}
+					</Button>
+				</form>
+			</div>
+		</>
+	)
+}
 
 export default function Home() {
 	const [fName, setFName] = useState('');
@@ -14,15 +116,13 @@ export default function Home() {
 	const [email, setEmail] = useState('');
 	const [message, setMessage] = useState('');
 
-	const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
+	const libraries = useRef<Libraries>(['places']);
 
-		// const formData = new FormData(event.currentTarget)
-		// const response = await fetch('/api/submit', {
-		//   method: 'POST',
-		//   body: formData,
-		// })
-	};
+	const { isLoaded } = useLoadScript({
+		googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?
+			process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY : 'uh oh',
+		libraries: libraries.current,
+	});
 
 	const onSubmitContactForm = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -102,37 +202,9 @@ export default function Home() {
 						/>
 					</div>
 				</div>
-				<div className="col-span-4 mx-10 md:col-span-2 md:mx-5">
-					<form onSubmit={onSubmit} className="flex flex-col items-center gap-10">
-						<div className="mb-6">
-							<p className="text-4xl mb-2">Find Your Neighborhood</p>
-							<p className="font-light">Search for an address and see what the area has to offer</p>
-						</div>
-						<Input
-							variant="bordered"
-							type="text"
-							label="Location"
-							name="location"
-							startContent={
-								<svg width="21" height="21" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M24.1245 25.3257L16.7426 17.9425C13.4588 20.2771 8.93375 19.7061 6.33289 16.6288C3.73204 13.5515 3.92301 8.9946 6.77222 6.14571C9.62068 3.29558 14.178 3.10378 17.2559 5.7045C20.3338 8.30521 20.9051 12.8307 18.5703 16.1148L25.9522 23.498L24.1258 25.3244L24.1245 25.3257ZM12.2515 6.45827C9.80209 6.45773 7.68891 8.17708 7.19134 10.5754C6.69376 12.9737 7.94856 15.3918 10.196 16.3657C12.4435 17.3396 15.0659 16.6015 16.4755 14.5984C17.8852 12.5954 17.6946 9.87774 16.0193 8.09096L16.8007 8.86596L15.9198 7.98763L15.9043 7.97213C14.9379 6.99973 13.6224 6.45458 12.2515 6.45827Z" fill="#B3B3B3" />
-								</svg>
-							}
-						/>
-						<Input
-							variant="bordered"
-							type="text"
-							name="school"
-							label="Your school"
-							startContent={
-								<svg width="21" height="21" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M24.1245 25.3257L16.7426 17.9425C13.4588 20.2771 8.93375 19.7061 6.33289 16.6288C3.73204 13.5515 3.92301 8.9946 6.77222 6.14571C9.62068 3.29558 14.178 3.10378 17.2559 5.7045C20.3338 8.30521 20.9051 12.8307 18.5703 16.1148L25.9522 23.498L24.1258 25.3244L24.1245 25.3257ZM12.2515 6.45827C9.80209 6.45773 7.68891 8.17708 7.19134 10.5754C6.69376 12.9737 7.94856 15.3918 10.196 16.3657C12.4435 17.3396 15.0659 16.6015 16.4755 14.5984C17.8852 12.5954 17.6946 9.87774 16.0193 8.09096L16.8007 8.86596L15.9198 7.98763L15.9043 7.97213C14.9379 6.99973 13.6224 6.45458 12.2515 6.45827Z" fill="#B3B3B3" />
-								</svg>
-							}
-						/>
-						<Button color="primary" className="text-2xl rounded py-6 px-6 bg-[#2196F3]" type="submit">Get Score</Button>
-					</form>
-				</div>
+				{isLoaded ? <SearchFields /> : <CircularProgress size="sm" aria-label="Loading..." />}
+
+
 				<div className="hidden md:inline-block self-end w-full left-0">
 					<Image
 						src="/assets/images/extra_graphic_1.png"
@@ -215,16 +287,20 @@ export default function Home() {
 					/>
 					<Accordion variant="splitted">
 						<AccordionItem key="1" aria-label="Accordion 1" title="What is Student Space?">
-							asd
+							<p>Student Space is your companion for finding the perfect place to stay during your student journey. Bid farewell to the uncertainties of renting with the ultimate tool for students seeking convenience and peace of mind in their housing search.</p>
+							<br />
+							<p>Student Space helps students to determine whether a rental place is suitable to your needs through a score system based on proximity to public transport and necessities.</p>
+						</AccordionItem>
+						<AccordionItem key="4" aria-label="Accordion 4" title="Who we are and our values">
+							<p>We are a team of international student and fresh graduates. We have had our own share of struggles when we were renting for the first time in Canada. That is why we believe in giving students the tools they need to take control of their housing search and find the best possible home for their needs.</p>
+							<br />
+							<p>Student Space is also about accessibility. We strive to make our app easy to use, inclusive, and available to students of all backgrounds, assisting them to find suitable housing options that meet their needs and preferences.</p>
 						</AccordionItem>
 						<AccordionItem key="2" aria-label="Accordion 2" title="How do we calculate score?">
-							asd
+							<p>A well guarded secret!</p>
 						</AccordionItem>
 						<AccordionItem key="3" aria-label="Accordion 3" title="Assets and softwares we used for this demo">
 							Images - Unsplash Icons - Freepik  Planning - Figma Map - Google
-						</AccordionItem>
-						<AccordionItem key="4" aria-label="Accordion 4" title="Who we are and our values">
-							asd
 						</AccordionItem>
 					</Accordion>
 					<Image

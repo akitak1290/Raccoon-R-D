@@ -3,6 +3,7 @@
 import { useCallback, Key } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Switch, Link } from "@nextui-org/react";
 import { useRouter } from 'next/navigation'
+import { ScoreType } from "../_recoil/ContextProvider";
 
 // TODO: fill with real data
 const columns = [
@@ -21,16 +22,35 @@ const listings = [
 	}
 ]
 
-type Listing = typeof listings[0];
+type ListingType = {
+	id: number,
+	address: string,
+	score: number,
+	school: string
+};
 
 // !CONSTRAIN: only 3 listings can be compared for now
 
 export default function CompareTable() {
 	const router = useRouter();
-	// const [isSelected, setIsSelected] = useState(true);
+	// localStorage.removeItem('scores');
 
-	const renderCell = useCallback((listing: Listing, columnKey: Key) => {
-		const cellValue = listing[columnKey as keyof Listing];
+	const scores = localStorage.getItem('scores');
+	let listings: ListingType[];
+	if (scores) {
+		const scoresParsed: ListingType[] = JSON.parse(scores);
+		listings = scoresParsed.map(score => score)
+	} else {
+		listings = [{
+			id: 1,
+			address: '',
+			score: 0,
+			school: ''
+		}]
+	}
+
+	const renderCell = useCallback((listing: ListingType, columnKey: Key) => {
+		const cellValue = listing[columnKey as keyof ListingType];
 
 		switch (columnKey) {
 			case "address":
