@@ -49,6 +49,7 @@ function SearchFields() {
 
 		setLoadingAddress(true);
 
+		// REMOVED public API.
 		fetch('https://oz7j1a4yb9.execute-api.ap-southeast-1.amazonaws.com/test/calculate-scores',
 			{
 				method: 'post',
